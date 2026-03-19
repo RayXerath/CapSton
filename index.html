@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questy</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Questy</h1>
+      <p>목표를 달성하고 펫을 성장시켜 보세요.</p>
+    </header>
+
+    <main>
+      <section class="goal-form-section">
+        <h2>퀘스트 추가</h2>
+
+        <form id="goal-form" class="goal-form">
+          <input type="text" id="goal-input" placeholder="예: 알고리즘 30분 공부" />
+
+          <select id="difficulty-select">
+            <option value="1">쉬움</option>
+            <option value="2">보통</option>
+            <option value="3">어려움</option>
+          </select>
+
+          <button type="submit">추가하기</button>
+        </form>
+      </section>
+
+      <section class="goal-list-section">
+        <h2>오늘의 퀘스트</h2>
+        <ul id="goal-list" class="goal-list"></ul>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>오늘의 대시보드</h2>
+        <div class="dashboard-card">
+          <p>오늘 성공: <span id="success-count">0</span></p>
+          <p>오늘 실패: <span id="fail-count">0</span></p>
+          <p>오늘 성공률: <span id="success-rate">0%</span></p>
+        </div>
+      </section>
+
+      <section class="pet-section">
+        <h2>내 펫</h2>
+        <div class="pet-card">
+          <p>이름: Questy</p>
+          <p>레벨: <span id="pet-level">1</span></p>
+          <p>XP: <span id="pet-xp">0</span></p>
+          <p>스티커: <span id="sticker-count">0</span></p>
+        </div>
+      </section>
+
+      <section class="reset-section">
+        <button id="reset-btn">전체 데이터 초기화</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
