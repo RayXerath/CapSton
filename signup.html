@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Questy 회원가입</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <section>
+        <h1>회원가입</h1>
+
+        <div class="auth-box">
+          <input
+            type="text"
+            id="signup-username"
+            placeholder="아이디를 입력하세요"
+          />
+          <input
+            type="password"
+            id="signup-password"
+            placeholder="비밀번호를 입력하세요"
+          />
+          <button id="signup-btn">회원가입</button>
+        </div>
+
+        <p>이미 계정이 있나요?</p>
+        <button onclick="location.href = 'login.html'">
+          로그인 페이지로 이동
+        </button>
+        <button onclick="location.href = 'index.html'">
+          메인으로 돌아가기
+        </button>
+      </section>
+    </div>
+
+    <script src="auth.js"></script>
+  </body>
+</html>

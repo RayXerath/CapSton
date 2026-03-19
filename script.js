@@ -22,20 +22,46 @@ const failCount = document.querySelector("#fail-count");
 const successRate = document.querySelector("#success-rate");
 const resetBtn = document.querySelector("#reset-btn");
 
-// localStorage에서 저장된 데이터 불러오기
-let goals = JSON.parse(localStorage.getItem("goals")) || [];
-let records = JSON.parse(localStorage.getItem("records")) || [];
+const moveLoginBtn = document.querySelector("#move-login-btn");
+const moveSignupBtn = document.querySelector("#move-signup-btn");
+const currentUserText = document.querySelector("#current-user");
+const logoutBtn = document.querySelector("#logout-btn");
 
-let xp = Number(localStorage.getItem("xp")) || 0;
-let level = Number(localStorage.getItem("level")) || 1;
-let stickers = Number(localStorage.getItem("stickers")) || 0;
+// 현재 로그인 한 사용자에 따라 나중에 불러오기
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+
+let goals = [];
+let records = [];
+let xp = 0;
+let level = 1;
+let stickers = 0;
 
 // 페이지가 처음 열릴 때 화면에 바로 반영
+loadUserData();
 renderGoals();
 updatePetUI();
 updateDashboard();
+updateAuthHomeUI();
+toggleAppByLogin();
 
+// 이벤트 연결
 resetBtn.addEventListener("click", resetAllData);
+
+if (moveLoginBtn) {
+  moveLoginBtn.addEventListener("click", function () {
+    location.href = "login.html";
+  });
+}
+
+if (moveSignupBtn) {
+  moveSignupBtn.addEventListener("click", function () {
+    location.href = "signup.html";
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", logout);
+}
 
 // 목표를 입력받는 곳
 goalForm.addEventListener("submit", function (event) {
@@ -74,7 +100,8 @@ function renderGoals() {
 
     const today = getTodayDate();
 
-    const todayRecord = records.find(function (record) { // 오늘 날자의 기록을 record에서 찾아라.
+    const todayRecord = records.find(function (record) {
+      // 오늘 날자의 기록을 record에서 찾아라.
       return record.goalId === goal.id && record.date === today;
     });
 
@@ -127,7 +154,7 @@ function completeGoal(goalId, isSuccess) {
   const today = getTodayDate();
 
   const alreadyChecked = records.find(function (record) {
-  return record.goalId === goalId && record.date === today;
+    return record.goalId === goalId && record.date === today;
   });
 
   if (alreadyChecked) {
@@ -135,14 +162,15 @@ function completeGoal(goalId, isSuccess) {
     return;
   }
 
-  const record = { // 기록 남기기
+  const record = {
+    // 기록 남기기
     goalId: goalId,
     result: isSuccess ? "success" : "fail",
     date: today,
   };
 
   records.push(record);
-  saveRecords();  
+  saveRecords();
 
   if (isSuccess) {
     const earnedXp = goal.difficulty * 10;
@@ -201,19 +229,22 @@ function savePetData() {
   localStorage.setItem("stickers", stickers);
 }
 
-// 대시보드 
+// 대시보드
 function updateDashboard() {
   const today = getTodayDate();
 
-  const todayRecords = records.filter(function (record) { // 오늘 일자만 기록 남기기
+  const todayRecords = records.filter(function (record) {
+    // 오늘 일자만 기록 남기기
     return record.date === today;
   });
 
-  const successRecords = todayRecords.filter(function (record) { // 성공만 뽑기
+  const successRecords = todayRecords.filter(function (record) {
+    // 성공만 뽑기
     return record.result === "success";
   });
 
-  const failRecords = todayRecords.filter(function (record) { // 실패만 뽑기
+  const failRecords = todayRecords.filter(function (record) {
+    // 실패만 뽑기
     return record.result === "fail";
   });
 
@@ -290,7 +321,7 @@ function editGoal(goalId) {
 
   const newDifficulty = prompt(
     "수정할 난이도를 입력하세요. (1: 쉬움, 2: 보통, 3: 어려움)",
-    goal.difficulty
+    goal.difficulty,
   );
 
   if (newDifficulty === null) return;
@@ -313,4 +344,62 @@ function editGoal(goalId) {
   renderGoals();
 
   alert("목표가 수정되었습니다.");
+}
+
+// 로그인 회원가입 버튼 작동
+updateAuthHomeUI();
+
+function updateAuthHomeUI() {
+  if (currentUser) {
+    currentUserText.textContent = currentUser.username;
+  } else {
+    currentUserText.textContent = "로그인 안 됨";
+  }
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem("currentUser");
+  updateAuthHomeUI();
+  alert("로그아웃되었습니다.");
+}
+
+if (moveLoginBtn) {
+  moveLoginBtn.addEventListener("click", function () {
+    location.href = "login.html";
+  });
+}
+
+if (moveSignupBtn) {
+  moveSignupBtn.addEventListener("click", function () {
+    location.href = "signup.html";
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", logout);
+}
+
+// 로그인한 사람의 저장키 자동 생성
+function getStorageKey(keyName) {
+  if (!currentUser) return null;
+  return `${keyName}_${currentUser.id}`;
+}
+
+function loadUserData() {
+  if (!currentUser) {
+    goals = [];
+    records = [];
+    xp = 0;
+    level = 1;
+    stickers = 0;
+    return;
+  }
+
+  goals = JSON.parse(localStorage.getItem(getStorageKey("goals"))) || [];
+  records = JSON.parse(localStorage.getItem(getStorageKey("records"))) || [];
+
+  xp = Number(localStorage.getItem(getStorageKey("xp"))) || 0;
+  level = Number(localStorage.getItem(getStorageKey("level"))) || 1;
+  stickers = Number(localStorage.getItem(getStorageKey("stickers"))) || 0;
 }
